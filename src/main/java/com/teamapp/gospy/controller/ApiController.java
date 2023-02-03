@@ -7,10 +7,7 @@ import com.teamapp.gospy.models.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.connection.SortParameters;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -23,25 +20,36 @@ public class ApiController {
     @Autowired
     UserRepository userRepo;
 
-    @GetMapping("/person/all")
+    @GetMapping("/person/getall")
     Iterable<Person> allTrackedPeople() {
-        return personRepo.findAll(Sort.by(Sort.Direction.ASC,"locationUpdated"));
+
+        //return personRepo.findAll(Sort.by(Sort.Direction.ASC, "locationUpdated"));
+        return personRepo.findAll();
     }
 
-    @GetMapping("/person/{id}")
-    Optional<Person> personById(@PathVariable String id) {
-        return personRepo.getById(id);
+    @GetMapping("/person/getById/{id}")
+    Optional<Person> personById(@PathVariable("id") String id) {
+        return personRepo.findById(id);
+    }
+
+    @GetMapping("/person/create/{name}")
+    Optional<Person> createPerson(@PathVariable("name") String name) {
+        Person temp = Person.of(name);
+        Person savedPerson = personRepo.save(temp);
+        return Optional.of(savedPerson);
     }
 
     /// USERS
 
-    @GetMapping("/user/all")
+    @GetMapping("/user/getall")
     Iterable<User> allUsers() {
-        return userRepo.findAll(Sort.by(Sort.Direction.ASC,"name"));
+
+        //return userRepo.findAll(Sort.by(Sort.Direction.ASC, "name"));
+        return userRepo.findAll();
     }
 
-    @GetMapping("/user/{id}")
-    Optional<User> userById(@PathVariable String id) {
-        return userRepo.getById(id);
+    @GetMapping("/user/getById/{id}")
+    Optional<User> userById(@PathVariable("id") String id) {
+        return userRepo.findById(id);
     }
 }

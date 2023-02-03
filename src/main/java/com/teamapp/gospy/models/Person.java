@@ -10,21 +10,9 @@ import org.springframework.data.geo.Point;
 import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
 import com.redis.om.spring.annotations.Searchable;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisHash;
 
-@RequiredArgsConstructor(staticName = "of") //makes the creation of a new Person object,
-                                            // easy by just calling Person.of (" ", " ", ...)
-                                            // with the required arguments
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Data
 @Document
-@RedisHash("Person")
 public class Person {
     // Id Field, also indexed
     @Id
@@ -32,17 +20,68 @@ public class Person {
     private String id;
 
     // Indexed for exact text matching
-    @Indexed @NonNull
+    @Indexed
+
     private String name;
 
-    @Indexed @NonNull
+    @Indexed
     private String deviceToken;
 
     //Indexed for Geo Filtering
-    @Indexed @NonNull
+    @Indexed
     private Point location;
 
-    @Indexed @NonNull
+    @Indexed
     private Date locationUpdated;
 
+    protected Person(String name){
+        this.name = name;
+        this.id = null;
+        this.deviceToken = null;
+        this.location = null;
+        this.locationUpdated = null;
+    }
+    public static Person of(String name){
+        return new Person(name);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public void setLocation(Point location) {
+        this.location = location;
+    }
+
+    public Date getLocationUpdated() {
+        return locationUpdated;
+    }
+
+    public void setLocationUpdated(Date locationUpdated) {
+        this.locationUpdated = locationUpdated;
+    }
 }

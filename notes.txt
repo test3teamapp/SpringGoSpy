@@ -1,0 +1,4 @@
+1)Lombok was not performing ok.
+Methods were generated (could see them in the structure window, but...
+they were not identified during compilation.
+2)removed Lombok and hardcoded all been methods/constructors
