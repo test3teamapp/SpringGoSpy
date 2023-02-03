@@ -1,4 +1,4 @@
-package com.teamapp.gospy;
+package com.teamapp.gospy.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
