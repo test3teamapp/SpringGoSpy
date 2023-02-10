@@ -6,8 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
-@EnableRedisDocumentRepositories("com.teamapp.gospy.*")
+
 @SpringBootApplication
+@EnableRedisDocumentRepositories
 public class GoSpyApplication {
 
 	public static void main(String[] args) {

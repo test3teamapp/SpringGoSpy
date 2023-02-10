@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisHash;
 import java.util.Date;
 
 @Document
+@RedisHash("User")
 public class User {
 
     @Id

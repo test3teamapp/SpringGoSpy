@@ -13,6 +13,7 @@ import com.redis.om.spring.annotations.Searchable;
 import org.springframework.data.redis.core.RedisHash;
 
 @Document
+@RedisHash("Person") // this is used (among others) to avoid having as keyspace the full qualified class name
 public class Person {
     // Id Field, also indexed
     @Id
@@ -33,6 +34,10 @@ public class Person {
 
     @Indexed
     private Date locationUpdated;
+
+    public Person(){
+        this.id = null;
+    }
 
     protected Person(String name){
         this.name = name;

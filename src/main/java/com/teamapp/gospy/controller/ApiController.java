@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
 public class ApiController {
     @Autowired
     PersonRepository personRepo;
@@ -20,36 +19,47 @@ public class ApiController {
     @Autowired
     UserRepository userRepo;
 
-    @GetMapping("/person/getall")
+    @GetMapping("/api/person/getall")
     Iterable<Person> allTrackedPeople() {
-
+        System.out.println("allTrackedPeople() called");
         //return personRepo.findAll(Sort.by(Sort.Direction.ASC, "locationUpdated"));
         return personRepo.findAll();
     }
 
-    @GetMapping("/person/getById/{id}")
+    @GetMapping("/api/person/getById/{id}")
     Optional<Person> personById(@PathVariable("id") String id) {
         return personRepo.findById(id);
     }
 
-    @GetMapping("/person/create/{name}")
-    Optional<Person> createPerson(@PathVariable("name") String name) {
-        Person temp = Person.of(name);
-        Person savedPerson = personRepo.save(temp);
+    @PostMapping(path = "/api/person/create/" , consumes = "application/json")
+    Optional<Person> createPerson(@RequestBody Person newPerson) {
+        System.out.println(newPerson.toString());
+        Person savedPerson = personRepo.save(newPerson);
         return Optional.of(savedPerson);
     }
 
-    /// USERS
+    @GetMapping("/api/person/updateLocation/byName/{name}/lat/{lat}/lng/{lng}")
+    Optional<Person> updateLocation(@PathVariable String name,  @PathVariable String lat, @PathVariable String lng) {
+        return Optional.of(null);
+    }
 
-    @GetMapping("/user/getall")
+    /// USERS com.teamapp.gospy.controller.GoSpyErrorController#handleError(HttpServletRequest)
+
+    @GetMapping("/api/user/getall")
     Iterable<User> allUsers() {
 
         //return userRepo.findAll(Sort.by(Sort.Direction.ASC, "name"));
         return userRepo.findAll();
     }
 
-    @GetMapping("/user/getById/{id}")
+    @GetMapping("/api/user/getById/{id}")
     Optional<User> userById(@PathVariable("id") String id) {
         return userRepo.findById(id);
     }
+    @PostMapping("/api/user/create")
+    Optional<User> createUser(@RequestBody User newUser) {
+        User savedUser = userRepo.save(newUser);
+        return Optional.of(savedUser);
+    }
+
 }
