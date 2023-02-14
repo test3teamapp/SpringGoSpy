@@ -2,14 +2,12 @@ package com.teamapp.gospy.models;
 
 
 import java.util.Date;
-import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.geo.Point;
 
 import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
-import com.redis.om.spring.annotations.Searchable;
 import org.springframework.data.redis.core.RedisHash;
 
 @Document

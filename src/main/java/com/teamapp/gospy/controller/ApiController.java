@@ -5,8 +5,6 @@ import com.teamapp.gospy.models.PersonRepository;
 import com.teamapp.gospy.models.User;
 import com.teamapp.gospy.models.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.redis.connection.SortParameters;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;

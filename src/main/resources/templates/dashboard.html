@@ -34,6 +34,40 @@
                     <input type="submit" value="Sign Out"/>
                 </form>
             </div>
+            <!-- Begin Table Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Date</th>
+                                    <th>Location</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="person : ${allPeopleList}">
+                                    <td th:text="${person.name}">Onions</td>
+                                    <td th:text="${person.locationUpdated}">2.41</td>
+                                    <td th:text="${person.location}">yes</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
         </div> <!-- Main Content -->
     </div> <!-- Content Wrapper -->
 </div> <!-- Page Wrapper -->
