@@ -2,13 +2,15 @@ package com.teamapp.gospy.models;
 
 import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
+import com.redis.om.spring.annotations.Searchable;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.util.Date;
 
 @Document
-@RedisHash("User")
+@KeySpace("User")
 public class User {
 
     @Id
@@ -16,6 +18,7 @@ public class User {
     public String id;
 
     @Indexed
+    @Searchable
     public String name;
     @Indexed
     public String pass;

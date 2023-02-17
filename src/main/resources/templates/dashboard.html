@@ -51,14 +51,16 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Date</th>
-                                    <th>Location</th>
+                                    <th>Lat</th>
+                                    <th>Lng</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="person : ${allPeopleList}">
-                                    <td th:text="${person.name}">Onions</td>
-                                    <td th:text="${person.locationUpdated}">2.41</td>
-                                    <td th:text="${person.location}">yes</td>
+                                    <td th:text="${person.name}">unknown ?</td>
+                                    <td th:text="${person.locationUpdated}">unknown ?</td>
+                                    <td th:if="${person.location} != null" th:text="${person.location.x}">unknown ?</td>
+                                    <td th:if="${person.location} != null" th:text="${person.location.y}">unknown ?</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -67,7 +69,13 @@
                 </div>
 
             </div>
-            <!-- /.container-fluid -->
+            <!-- /.container-fluid table data-->
+            <!-- map -->
+            <!--Google map-->
+            <div class="container-fluid">
+            <div id="map-container" style="width:100%; height: 550px; margin-bottom: 30px;"></div>
+            </div>
+            <!-- end map -->
         </div> <!-- Main Content -->
     </div> <!-- Content Wrapper -->
 </div> <!-- Page Wrapper -->
@@ -83,6 +91,7 @@
 
 <!-- Page level plugins -->
 <script src="vendor/chart.js/Chart.min.js"></script>
-
+<script type='text/javascript' src="js/gmaps/gmapsOperations.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIn6EtzQ482NgOt7SoHO2lDnuSlKCcP-g&callback=initMap"></script>
 </body>
 </html>

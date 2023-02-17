@@ -3,15 +3,17 @@ package com.teamapp.gospy.models;
 
 import java.util.Date;
 
+import com.redis.om.spring.annotations.Searchable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.geo.Point;
 
 import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
+import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.redis.core.RedisHash;
 
 @Document
-@RedisHash("Person") // this is used (among others) to avoid having as keyspace the full qualified class name
+@KeySpace("Person") // this is used (among others) to avoid having as keyspace the full qualified class name
 public class Person {
     // Id Field, also indexed
     @Id
@@ -20,7 +22,7 @@ public class Person {
 
     // Indexed for exact text matching
     @Indexed
-
+    @Searchable
     private String name;
 
     @Indexed
@@ -33,8 +35,16 @@ public class Person {
     @Indexed
     private Date locationUpdated;
 
+    @Indexed
+    private int age;
+
     public Person(){
         this.id = null;
+        this.id = null;
+        this.deviceToken = null;
+        this.location = null;
+        this.locationUpdated = null;
+        this.age = -1;
     }
 
     protected Person(String name){
@@ -43,6 +53,7 @@ public class Person {
         this.deviceToken = null;
         this.location = null;
         this.locationUpdated = null;
+        this.age = -1;
     }
     public static Person of(String name){
         return new Person(name);
@@ -86,5 +97,13 @@ public class Person {
 
     public void setLocationUpdated(Date locationUpdated) {
         this.locationUpdated = locationUpdated;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }
