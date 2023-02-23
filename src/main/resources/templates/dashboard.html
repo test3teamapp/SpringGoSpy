@@ -59,8 +59,8 @@
                                 <tr th:each="person : ${allPeopleList}">
                                     <td th:text="${person.name}">unknown ?</td>
                                     <td th:text="${person.locationUpdated}">unknown ?</td>
-                                    <td th:if="${person.location} != null" th:text="${person.location.x}">unknown ?</td>
-                                    <td th:if="${person.location} != null" th:text="${person.location.y}">unknown ?</td>
+                                    <td th:if="${person.location} != null" th:text="${person.location.latitude}">unknown ?</td>
+                                    <td th:if="${person.location} != null" th:text="${person.location.longitude}">unknown ?</td>
                                 </tr>
                                 </tbody>
                             </table>

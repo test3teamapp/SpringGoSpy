@@ -4,6 +4,7 @@ import com.teamapp.gospy.models.Person;
 import com.teamapp.gospy.models.PersonRepository;
 import com.teamapp.gospy.models.User;
 import com.teamapp.gospy.models.UserRepository;
+import com.teamapp.gospy.services.PersonDBService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +16,17 @@ public class ApiController {
     PersonRepository personRepo;
 
     @Autowired
+    PersonDBService personDBService;
+
+    @Autowired
     UserRepository userRepo;
 
     @GetMapping("/api/person/getall")
     Iterable<Person> allTrackedPeople() {
         System.out.println("allTrackedPeople() called");
         //return personRepo.findAll(Sort.by(Sort.Direction.ASC, "locationUpdated"));
-        return personRepo.findAll();
+        return personDBService.findAllPeople();
+        //return personRepo.findAll();
     }
 
     @GetMapping("/api/person/getById/{id}")
@@ -38,6 +43,7 @@ public class ApiController {
 
     @GetMapping("/api/person/updateLocation/byName/{name}/lat/{lat}/lng/{lng}")
     Optional<Person> updateLocation(@PathVariable String name,  @PathVariable String lat, @PathVariable String lng) {
+
         return Optional.of(null);
     }
 

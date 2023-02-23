@@ -18,7 +18,7 @@ public class Person {
     // Id Field, also indexed
     @Id
     @Indexed
-    private String id;
+    private String entityId;
 
     // Indexed for exact text matching
     @Indexed
@@ -30,41 +30,35 @@ public class Person {
 
     //Indexed for Geo Filtering
     @Indexed
-    private Point location;
+    private Location location;
 
     @Indexed
     private Date locationUpdated;
 
-    @Indexed
-    private int age;
-
     public Person(){
-        this.id = null;
-        this.id = null;
+        this.entityId = null;
         this.deviceToken = null;
         this.location = null;
         this.locationUpdated = null;
-        this.age = -1;
     }
 
     protected Person(String name){
         this.name = name;
-        this.id = null;
+        this.entityId = null;
         this.deviceToken = null;
         this.location = null;
         this.locationUpdated = null;
-        this.age = -1;
     }
     public static Person of(String name){
         return new Person(name);
     }
 
-    public String getId() {
-        return id;
+    public String getEntityId() {
+        return entityId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setEntityId(String entityId) {
+        this.entityId = entityId;
     }
 
     public String getName() {
@@ -83,11 +77,11 @@ public class Person {
         this.deviceToken = deviceToken;
     }
 
-    public Point getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(Point location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
@@ -99,11 +93,10 @@ public class Person {
         this.locationUpdated = locationUpdated;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
+    @Override
+    public String toString(){
+        return "id=" + this.entityId + ",name=" + this.name +",location=" +
+                this.location.longitude + "/" + this.location.latitude +
+                ",locationUpdated=" + this.locationUpdated + ",deviceToken=" + this.deviceToken;
     }
 }
