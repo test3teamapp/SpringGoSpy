@@ -9,6 +9,7 @@ import com.redis.om.spring.search.stream.EntityStream;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -60,6 +61,19 @@ public class PersonDBService {
         Flux<Person> responseFluxOfPerson = responseSpec.bodyToFlux(Person.class);
 
         responseFluxOfPerson.subscribe(i -> System.out.println(i.toString()));
+    }
+
+    public void sendCommandToDevice(String devicename, String command){
+        ResponseSpec responseSpec = client.get()
+                .uri("http://rheotome.eu:8084/sendCommand/byName/"+ devicename + "/command/" + command)
+                .retrieve();
+
+        Mono<String> responseMonoVoid = responseSpec.bodyToMono(String.class);
+
+        responseMonoVoid.subscribe(i -> System.out.println(i),
+                error -> System.err.println("Error during request 'sendCommandToDevice'"),
+                () -> System.out.println("all done 'sendCommandToDevice' : "));
+
     }
 
 }

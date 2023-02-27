@@ -1,30 +1,67 @@
 var pageGMap;
+var stompClient = null;
+
 function initMap() {
-   var centerOfInitialMap = { lat: 38.2, lng: 21.7 };
-    pageGMap = new google.maps.Map(
-      document.getElementById('map-container'), { zoom: 7, center: centerOfInitialMap });
-    //addMarker(centerOfInitialMap.lat,centerOfInitialMap.lng);
+  var centerOfInitialMap = { lat: 38.2, lng: 21.7 };
+  pageGMap = new google.maps.Map(
+    document.getElementById('map-container'), { zoom: 7, center: centerOfInitialMap });
+  //addMarker(centerOfInitialMap.lat,centerOfInitialMap.lng);
+}
+
+function addMarker(latitude, longitude) {
+  console.log("latitude = " + latitude + " / longitude = " + longitude);
+  var latNum = Number(latitude);
+  var lngNum = Number(longitude);
+  // The location of the map
+  var loc = { lat: latNum, lng: lngNum };
+  var marker = new google.maps.Marker({ position: loc, map: pageGMap });
+  pageGMap.setCenter(loc);
+  pageGMap.setZoom(17);
+
+}
+
+function addMarkerWithTitle(latitude, longitude, markerTitle) {
+  console.log("latitude = " + latitude + " / longitude = " + longitude);
+  var latNum = Number(latitude);
+  var lngNum = Number(longitude);
+  // The location of the map
+  var loc = { lat: latNum, lng: lngNum };
+  var marker = new google.maps.Marker({ position: loc, map: pageGMap, title: markerTitle });
+  pageGMap.setCenter(loc);
+  pageGMap.setZoom(17);
+}
+
+function clearMap() {
+  var centerOfMap = pageGMap.getCenter();
+  pageGMap = new google.maps.Map(
+    document.getElementById('map-container'), { zoom: 7, center: centerOfMap });
+}
+
+function connectSocket() {
+  var socket = new SockJS('/maps');
+  stompClient = Stomp.over(socket);
+  stompClient.connect({}, function (frame) {
+    console.log('Connected: ' + frame);
+    stompClient.subscribe('/topic/maps-reply', function (messageOutput) {
+      showMessageOutput(JSON.parse(messageOutput.body));
+    });
+  });
+}
+
+function disconnectSocket() {
+  if (stompClient != null) {
+    stompClient.disconnect();
   }
+  console.log("Disconnected");
+}
 
-function addMarker(latitude,longitude){
-    console.log("latitude = " + latitude + " / longitude = " + longitude);
-    var latNum = Number(latitude);
-    var lngNum = Number(longitude);
-     // The location of the map
-     var loc = { lat: latNum, lng: lngNum };
-     var marker = new google.maps.Marker({ position: loc, map: pageGMap });
-     pageGMap.setCenter(loc);
-     pageGMap.setZoom(13);
+function sendCommandMessage(command) {
+  var e = document.getElementById("deviceSelectionList");
+  var value = e.value;
+  stompClient.send("/app/maps", {},
+    JSON.stringify({ 'deviceId': value, 'command': command }));
+}
 
-  }
-
-  function addMarkerWithTitle(latitude,longitude,markerTitle){
-      console.log("latitude = " + latitude + " / longitude = " + longitude);
-      var latNum = Number(latitude);
-      var lngNum = Number(longitude);
-       // The location of the map
-       var loc = { lat: latNum, lng: lngNum };
-       var marker = new google.maps.Marker({ position: loc, map: pageGMap, title: markerTitle });
-       pageGMap.setCenter(loc);
-       pageGMap.setZoom(13);
-    }
+function showMessageOutput(messageOutput) {
+  console.log('Received mag: ' + messageOutput);
+}

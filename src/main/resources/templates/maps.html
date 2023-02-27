@@ -19,7 +19,7 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 </head>
-<body>
+<body onload="connectSocket()">
 <!-- Page Wrapper -->
 <div id="wrapper">
     <!-- sidebar -->
@@ -57,11 +57,18 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="person : ${allPeopleList}" >
-                                    <td th:text="${person.name}" th:attr="onclick=|addMarkerWithTitle('${person.location.latitude}','${person.location.longitude}', '${person.name}')|">unknown ?</td>
+                                <tr th:each="person : ${allPeopleList}">
+                                    <td th:text="${person.name}"
+                                        th:attr="onclick=|addMarkerWithTitle('${person.location.latitude}','${person.location.longitude}', '${person.name}')|">
+                                        unknown ?
+                                    </td>
                                     <td th:text="${person.locationUpdated}">unknown ?</td>
-                                    <td th:if="${person.location} != null" th:text="${person.location.latitude}">unknown ?</td>
-                                    <td th:if="${person.location} != null" th:text="${person.location.longitude}">unknown ?</td>
+                                    <td th:if="${person.location} != null" th:text="${person.location.latitude}">unknown
+                                        ?
+                                    </td>
+                                    <td th:if="${person.location} != null" th:text="${person.location.longitude}">
+                                        unknown ?
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -71,28 +78,77 @@
 
             </div>
             <!-- /.container-fluid table data-->
-            <!-- map -->
-            <!--Google map-->
+            <!-- buttons -->
             <div class="container-fluid">
-                <div id="map-container" style="width:100%; height: 550px; margin-bottom: 30px;"></div>
-            </div>
-            <!-- end map -->
-        </div> <!-- Main Content -->
-    </div> <!-- Content Wrapper -->
-</div> <!-- Page Wrapper -->
-<!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+                <div class="card shadow mb-4">
+                    <form action="#" th:object="${commandObj}" method="post">
+                        <select id="deviceSelectionList" th:field="*{deviceId}">
+                            <option th:each="person : ${allPeopleList}" th:value="${person.name}"
+                                    th:text="${person.name}">???
+                            </option>
+                        </select>
+                        <!-- FUCKING APARADEKTO !!!!!!!! that it has to be this way !!!!!
+                        <input type="hidden" th:attr="value = ${selectedDeviceId}" th:field="*{deviceId}" />
+                        --->
+                        <button class="btn btn-primary" type="submit" th:attr="value='TRIGGER_LU'" th:field="*{command}"
+                                formaction="/maps/sendCommandToDeviceLU">
+                            Find Device
+                        </button>
+                        <button class="btn btn-primary" type="submit" th:attr="value='STOP_TRACKING'"
+                                th:field="*{command}" formaction="/maps/sendCommandToDeviceSTOP">
+                            Stop Tracking
+                        </button>
+                        <button class="btn btn-primary" type="submit" th:attr="value='STOP_TRACKING'"
+                                th:field="*{command}" formaction="/maps/sendCommandToDeviceSTOP">
+                            Start Tracking
+                        </button>
+                    </form>
+                </div>
+                <div class="card shadow mb-4">
+                    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                        <!-- websocket communication / alternative. no page reload -->
+                        <button class="btn btn-secondary" onclick="sendCommandMessage('TRIGGER_LU');">
+                            (WS) Find Device
+                        </button>
+                        <button class="btn btn-secondary" onclick="sendCommandMessage('STOP_TRACKING');">
+                            (WS) Stop Tracking
+                        </button>
+                        <button class="btn btn-secondary" onclick="sendCommandMessage('START_TRACKING');">
+                            (WS) Start Tracking
+                        </button>
+                        <p></p>
+                        <button class="btn btn-primary" onclick="clearMap()">
+                            Clear Map
+                        </button>
+                        <div>
+                        </div>
+                    </div>
 
-<!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+                    <!-- map -->
+                    <!--Google map-->
+                    <div class="container-fluid">
+                        <div id="map-container" style="width:100%; height: 550px; margin-bottom: 30px;"></div>
+                    </div>
+                    <!-- end map -->
+                </div> <!-- Main Content -->
+            </div> <!-- Content Wrapper -->
+        </div> <!-- Page Wrapper -->
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.min.js"></script>
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-<!-- Page level plugins -->
-<script src="vendor/chart.js/Chart.min.js"></script>
-<script type='text/javascript' src="js/gmaps/gmapsOperations.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIn6EtzQ482NgOt7SoHO2lDnuSlKCcP-g&callback=initMap"></script>
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
+
+        <!-- Page level plugins -->
+        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+        <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+        <script src="vendor/chart.js/Chart.min.js"></script>
+        <script type='text/javascript' src="js/gmaps/gmapsOperations.js"></script>
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIn6EtzQ482NgOt7SoHO2lDnuSlKCcP-g&callback=initMap"></script>
 </body>
 </html>
