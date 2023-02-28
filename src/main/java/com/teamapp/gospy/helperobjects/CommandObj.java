@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Bean;
 import java.io.Serializable;
 @Document
 public class CommandObj implements Serializable {
-    public String deviceId;
-    public String command;
+    private String deviceId;
+    private String command;
 
     public CommandObj() {
     }

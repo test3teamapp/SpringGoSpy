@@ -1,6 +1,9 @@
 package com.teamapp.gospy.services;
 
+import com.teamapp.gospy.helperobjects.CommandReplyObj;
 import com.teamapp.gospy.models.Person;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -63,17 +66,25 @@ public class PersonDBService {
         responseFluxOfPerson.subscribe(i -> System.out.println(i.toString()));
     }
 
-    public void sendCommandToDevice(String devicename, String command){
+    public Mono<CommandReplyObj> sendCommandToDevice(String devicename, String command){
         ResponseSpec responseSpec = client.get()
-                .uri("http://rheotome.eu:8084/sendCommand/byName/"+ devicename + "/command/" + command)
+                .uri("http://rheotome.eu:8084/sendCommand/spring/byName/"+ devicename + "/command/" + command)
                 .retrieve();
 
-        Mono<String> responseMonoVoid = responseSpec.bodyToMono(String.class);
+        Mono<CommandReplyObj> responseMonoCommandReplyObj= responseSpec.bodyToMono(CommandReplyObj.class);
 
-        responseMonoVoid.subscribe(i -> System.out.println(i),
-                error -> System.err.println("Error during request 'sendCommandToDevice'"),
-                () -> System.out.println("all done 'sendCommandToDevice' : "));
 
+        return responseMonoCommandReplyObj;
+    }
+
+    public Mono<CommandReplyObj> waitForLUForDevice(String devicename){
+        ResponseSpec responseSpec = client.get()
+                .uri("http://rheotome.eu:8084/waitForLU/spring/byName/" + devicename)
+                .retrieve();
+
+        Mono<CommandReplyObj> responseMonoCommandReplyObj = responseSpec.bodyToMono(CommandReplyObj.class);
+
+        return responseMonoCommandReplyObj;
     }
 
 }

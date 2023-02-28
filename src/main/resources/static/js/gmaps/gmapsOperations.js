@@ -42,8 +42,9 @@ function connectSocket() {
   stompClient = Stomp.over(socket);
   stompClient.connect({}, function (frame) {
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/maps-reply', function (messageOutput) {
-      showMessageOutput(JSON.parse(messageOutput.body));
+    stompClient.subscribe('/user/page/maps-reply', function (messageOutput) {
+    console.log("Received in page: 'maps-reply'");
+      handleMapsReply(JSON.parse(messageOutput.body));
     });
   });
 }
@@ -58,10 +59,14 @@ function disconnectSocket() {
 function sendCommandMessage(command) {
   var e = document.getElementById("deviceSelectionList");
   var value = e.value;
-  stompClient.send("/app/maps", {},
+  stompClient.send("/app/maps-sendcommand", {},
     JSON.stringify({ 'deviceId': value, 'command': command }));
+
+  if (command === "TRIGGER_LU"){
+    stompClient.send("/app/maps-waitforlu", {},value);
+  }
 }
 
-function showMessageOutput(messageOutput) {
-  console.log('Received mag: ' + messageOutput);
+function handleMapsReply(commandReplyObj) {
+  console.log('Received msg: ' + commandReplyObj);
 }

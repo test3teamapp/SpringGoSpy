@@ -83,6 +83,7 @@
                 <div class="card shadow mb-4">
                     <form action="#" th:object="${commandObj}" method="post">
                         <select id="deviceSelectionList" th:field="*{deviceId}">
+                            <option value="nick">nick</option>
                             <option th:each="person : ${allPeopleList}" th:value="${person.name}"
                                     th:text="${person.name}">???
                             </option>
