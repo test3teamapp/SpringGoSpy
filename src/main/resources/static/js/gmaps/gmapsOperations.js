@@ -1,5 +1,6 @@
 var pageGMap;
 var stompClient = null;
+var $;
 
 function initMap() {
   var centerOfInitialMap = { lat: 38.2, lng: 21.7 };
@@ -43,7 +44,7 @@ function connectSocket() {
   stompClient.connect({}, function (frame) {
     console.log('Connected: ' + frame);
     stompClient.subscribe('/user/page/maps-reply', function (messageOutput) {
-    console.log("Received in page: 'maps-reply'");
+      console.log("Received in page: 'maps-reply'");
       handleMapsReply(JSON.parse(messageOutput.body));
     });
   });
@@ -62,11 +63,58 @@ function sendCommandMessage(command) {
   stompClient.send("/app/maps-sendcommand", {},
     JSON.stringify({ 'deviceId': value, 'command': command }));
 
-  if (command === "TRIGGER_LU"){
-    stompClient.send("/app/maps-waitforlu", {},value);
+  if (command === "TRIGGER_LU") {
+    stompClient.send("/app/maps-waitforlu", {}, value);
   }
 }
 
+/*
+enum Alarmtype {
+    NONE = "",
+    INFO = "info",
+    SUCCESS =  "success",
+    WARNING =  "warning",
+    DANGER =  "danger"
+  }
+*/
 function handleMapsReply(commandReplyObj) {
-  console.log('Received msg: ' + commandReplyObj);
+
+  console.log('Received msg: error = ' + commandReplyObj.error +
+    ' name = ' + commandReplyObj.name + ' command = ' +
+    commandReplyObj.command + ' message = ' + commandReplyObj.message);
+
+  var msgType = 'info';
+  var msgString = '';
+  var msgIcon = "pe-7s-check"; //"pe-7s-attention" // pe-7s-map-marker 
+
+  if (commandReplyObj.error != null) {
+    msgType = 'danger';
+    msgString = commandReplyObj.error;
+    msgIcon = "pe-7s-attention";
+  } else if (commandReplyObj.message != null) {
+    msgType = 'success';
+    msgString = "Device " + commandReplyObj.name + "  was found !";
+    msgIcon = "pe-7s-map-marker";
+
+    // add marker on map
+    addMarkerWithTitle(commandReplyObj.message.latitude, commandReplyObj.message.longitude, commandReplyObj.name);
+
+  } else {
+    msgString = "Command " + commandReplyObj.command + " sent to device " + commandReplyObj.name;
+  }
+
+  $.notify(
+    {
+      icon: msgIcon,
+      message: msgString,
+    },
+    {
+      type: msgType,
+      timer: 2000,
+      placement: {
+        from: "top",
+        align: "center",
+      },
+    }
+  );
 }

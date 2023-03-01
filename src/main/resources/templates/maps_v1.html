@@ -81,27 +81,48 @@
             <!-- buttons -->
             <div class="container-fluid">
                 <div class="card shadow mb-4">
-
-                    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
-                        <select id="deviceSelectionList">
+                    <form action="#" th:object="${commandObj}" method="post">
+                        <select id="deviceSelectionList" th:field="*{deviceId}">
                             <option value="nick">nick</option>
                             <option th:each="person : ${allPeopleList}" th:value="${person.name}"
                                     th:text="${person.name}">???
                             </option>
                         </select>
+                        <!-- FUCKING APARADEKTO !!!!!!!! that it has to be this way !!!!!
+                        <input type="hidden" th:attr="value = ${selectedDeviceId}" th:field="*{deviceId}" />
+                        --->
+                        <button class="btn btn-primary" type="submit" th:attr="value='TRIGGER_LU'" th:field="*{command}"
+                                formaction="/maps/sendCommandToDeviceLU">
+                            Find Device
+                        </button>
+                        <button class="btn btn-primary" type="submit" th:attr="value='STOP_TRACKING'"
+                                th:field="*{command}" formaction="/maps/sendCommandToDeviceSTOP">
+                            Stop Tracking
+                        </button>
+                        <button class="btn btn-primary" type="submit" th:attr="value='STOP_TRACKING'"
+                                th:field="*{command}" formaction="/maps/sendCommandToDeviceSTOP">
+                            Start Tracking
+                        </button>
+                    </form>
+                </div>
+                <div class="card shadow mb-4">
+                    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
                         <!-- websocket communication / alternative. no page reload -->
-                        <button class="btn btn-primary" onclick="sendCommandMessage('TRIGGER_LU');">
+                        <button class="btn btn-secondary" onclick="sendCommandMessage('TRIGGER_LU');">
                             (WS) Find Device
                         </button>
-                        <button class="btn btn-primary" onclick="sendCommandMessage('STOP_TRACKING');">
+                        <button class="btn btn-secondary" onclick="sendCommandMessage('STOP_TRACKING');">
                             (WS) Stop Tracking
                         </button>
-                        <button class="btn btn-primary" onclick="sendCommandMessage('START_TRACKING');">
+                        <button class="btn btn-secondary" onclick="sendCommandMessage('START_TRACKING');">
                             (WS) Start Tracking
                         </button>
+                        <p></p>
                         <button class="btn btn-primary" onclick="clearMap()">
                             Clear Map
                         </button>
+                        <div>
+                        </div>
                     </div>
 
                     <!-- map -->

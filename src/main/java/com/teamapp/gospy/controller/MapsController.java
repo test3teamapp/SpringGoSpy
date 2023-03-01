@@ -66,22 +66,23 @@ public class MapsController {
     public CommandReplyObj sendCommand(CommandObj commandObj) throws Exception {
 
         Mono<CommandReplyObj> crobj = personDBService.sendCommandToDevice(commandObj.getDeviceId(), commandObj.getCommand());
-        crobj.subscribe(i -> System.out.println(i.toString()),
-                error -> System.err.println("Error during request 'sendCommandToDevice' : " + error.toString()),
-                () -> System.out.println("all done 'sendCommandToDevice' "));
+//        crobj.subscribe(i -> System.out.println(i.toString()),
+//                error -> System.err.println("Error during request 'sendCommandToDevice' : " + error.toString()),
+//                () -> System.out.println("all done 'sendCommandToDevice' "));
 
-        return new CommandReplyObj();
+        CommandReplyObj returnObj = crobj.block();
+        return  returnObj;
     }
 
     @MessageMapping("/maps-waitforlu")
     @SendToUser("/page/maps-reply")
     public CommandReplyObj waitForLU(String deviceid) throws Exception {
 
-        Mono<CommandReplyObj> crobjWaitLU = personDBService.waitForLUForDevice(deviceid);
-        crobjWaitLU.subscribe(i -> System.out.println(i.toString()),
-                error -> System.err.println("Error during request 'waitForLUForDevice' : " + error.toString()),
-                () -> System.out.println("all done 'waitForLUForDevice' "));
-
-        return new CommandReplyObj();
+        Mono<CommandReplyObj> crobj = personDBService.waitForLUForDevice(deviceid);
+//        crobj.subscribe(i -> System.out.println(i.toString()),
+//                error -> System.err.println("Error during request 'waitForLUForDevice' : " + error.toString()),
+//                () -> System.out.println("all done 'waitForLUForDevice' "));
+        CommandReplyObj returnObj = crobj.block();
+        return  returnObj;
     }
 }
