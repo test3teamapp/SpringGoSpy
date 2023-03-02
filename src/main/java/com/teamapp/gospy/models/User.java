@@ -10,26 +10,35 @@ import org.springframework.data.redis.core.RedisHash;
 import java.util.Date;
 
 @Document
-@KeySpace("User")
+//@KeySpace("User")
 public class User {
 
     @Id
     @Indexed
-    public String id;
+    private String id;
 
     @Indexed
-    @Searchable
-    public String name;
+    private String name;
     @Indexed
-    public String pass;
+    private String pass;
     @Indexed
-    public String token;
+    private String token;
     @Indexed
-    public String chat;
+    private String chat;
     @Indexed
-    public String expires;
+    private String expires;
     @Indexed
-    public Date lastlogin;
+    private Date lastlogin;
+
+    public User() {
+        this.name = null;
+        this.pass = null;
+        this.lastlogin = null;
+        this.token = null;
+        this.expires = null;
+        this.chat = null;
+        this.id = null;
+    }
 
     protected User(String name, String pass) {
         this.name = name;

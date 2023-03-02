@@ -13,7 +13,7 @@ import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.redis.core.RedisHash;
 
 @Document
-@KeySpace("Person") // this is used (among others) to avoid having as keyspace the full qualified class name
+//@KeySpace("Person") // this is used (among others) to avoid having as keyspace the full qualified class name
 public class Person {
     // Id Field, also indexed
     @Id
@@ -22,7 +22,6 @@ public class Person {
 
     // Indexed for exact text matching
     @Indexed
-    @Searchable
     private String name;
 
     @Indexed
