@@ -3,50 +3,55 @@ package com.teamapp.gospy.models;
 import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
 import com.redis.om.spring.annotations.Searchable;
+import com.teamapp.gospy.helperobjects.Role;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Document
 //@KeySpace("User")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @Indexed
     private String id;
-
     @Indexed
-    private String name;
+    @Searchable
+    private String username;
     @Indexed
-    private String pass;
+    private String password;
     @Indexed
+    @Searchable
     private String token;
-    @Indexed
-    private String chat;
-    @Indexed
-    private String expires;
     @Indexed
     private Date lastlogin;
 
     public User() {
-        this.name = null;
-        this.pass = null;
+        this.username = null;
+        this.password = null;
         this.lastlogin = null;
         this.token = null;
-        this.expires = null;
-        this.chat = null;
         this.id = null;
     }
 
-    protected User(String name, String pass) {
-        this.name = name;
-        this.pass = pass;
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
         this.lastlogin = null;
         this.token = "loggedout";
-        this.expires = "never";
-        this.chat = "offline";
+        this.id = null;
+    }
+    public User(String username, String password, boolean accountNonLocked) {
+        this.username = username;
+        this.password = password;
+        this.lastlogin = null;
+        this.token = "loggedout";
         this.id = null;
     }
 
@@ -62,20 +67,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPass() {
-        return pass;
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getToken() {
@@ -86,22 +83,6 @@ public class User {
         this.token = token;
     }
 
-    public String getChat() {
-        return chat;
-    }
-
-    public void setChat(String chat) {
-        this.chat = chat;
-    }
-
-    public String getExpires() {
-        return expires;
-    }
-
-    public void setExpires(String expires) {
-        this.expires = expires;
-    }
-
     public Date getLastlogin() {
         return lastlogin;
     }
@@ -109,4 +90,39 @@ public class User {
     public void setLastlogin(Date lastlogin) {
         this.lastlogin = lastlogin;
     }
+
+
+    @Override
+    public Collection<UserAuthority> getAuthorities() {
+        return List.of(new UserAuthority(Role.USER));
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }

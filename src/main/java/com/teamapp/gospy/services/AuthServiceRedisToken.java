@@ -38,7 +38,7 @@ public class AuthServiceRedisToken {
 
     private Optional<Authentication> lookup(String token) {
         try {
-            Optional<User> user = this.userRepo.findByToken(token);
+            Optional<User> user = this.userRepo.findOneByToken(token);
             if (!user.isEmpty()) {
                 Authentication authentication = createAuthentication(user.get().getId(), Role.USER);
                 return Optional.of(authentication);

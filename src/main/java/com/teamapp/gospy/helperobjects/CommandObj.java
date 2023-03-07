@@ -4,7 +4,7 @@ import com.redis.om.spring.annotations.Document;
 import org.springframework.context.annotation.Bean;
 
 import java.io.Serializable;
-@Document
+
 public class CommandObj implements Serializable {
     private String deviceId;
     private String command;

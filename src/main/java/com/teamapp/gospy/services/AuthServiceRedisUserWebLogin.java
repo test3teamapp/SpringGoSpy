@@ -4,10 +4,14 @@ import com.teamapp.gospy.helperobjects.Credentials;
 import com.teamapp.gospy.helperobjects.Role;
 import com.teamapp.gospy.models.User;
 import com.teamapp.gospy.models.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,7 +19,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
@@ -28,9 +31,9 @@ import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 @Service
-public class AuthServiceRedisUser {
+public class AuthServiceRedisUserWebLogin {
 
-    private static Logger logger = LoggerFactory.getLogger(AuthServiceRedisUser.class);
+    private static Logger logger = LoggerFactory.getLogger(AuthServiceRedisUserWebLogin.class);
     private static final PasswordEncoder BCRYPT = new BCryptPasswordEncoder();
     private static final Base64.Decoder B64_DECODER = Base64.getDecoder();
     private static final String BASIC_PREFIX = "Basic ";
@@ -39,7 +42,7 @@ public class AuthServiceRedisUser {
     UserRepository userRepo;
 
     public Optional<Authentication> authenticate(HttpServletRequest request) {
-        return extractUserAuthHeader(request).flatMap(this::check);
+        return extractUserAuthCredentials(request).flatMap(this::check);
     }
 
     private Optional<Authentication> check(Credentials credentials) {
@@ -48,7 +51,7 @@ public class AuthServiceRedisUser {
             Optional<User> user = this.userRepo.findOneByUsername(credentials.getUsername());
             if (user.isPresent()) {
                 if (credentials.getPassword().compareTo(user.get().getPassword()) == 0) {
-                    Authentication authentication = createAuthentication(credentials.getUsername(), Role.ADMIN);
+                    Authentication authentication = createAuthentication(credentials.getUsername(), credentials.getPassword(), Role.ADMIN);
                     return Optional.of(authentication);
                 }
             }
@@ -59,23 +62,23 @@ public class AuthServiceRedisUser {
         }
     }
 
-    private static Optional<Credentials> extractUserAuthHeader(@NonNull HttpServletRequest request) {
+    private static Optional<Credentials> extractUserAuthCredentials(@NonNull HttpServletRequest request) {
         try {
-            String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-            //debug
-            logger.info("Http Authorization Header = " + authorization);
-            if (nonNull(authorization)) {
-                if (authorization.startsWith(BASIC_PREFIX)) {
-                    String encodedCredentials = authorization.substring(BASIC_PREFIX.length());
-                    String decodedCredentials = new String(B64_DECODER.decode(encodedCredentials), UTF_8);
-                    logger.info("Http credentials decoded = " + decodedCredentials);
-                    if (decodedCredentials.contains(":")) {
-                        String[] split = decodedCredentials.split(":", 2);
-                        Credentials credentials = new Credentials(split[0], split[1]);
-                        return Optional.of(credentials);
-                    }
+            System.out.println("AuthServiceRedisUserWebLogin : Request type : " + request.getMethod() + " " + request.getAuthType() + " " + request.getRequestURI());
+
+            if (request.getMethod().compareTo(HttpMethod.POST.name()) == 0
+                    && request.getRequestURI().compareTo("/login") == 0) {
+                for (Cookie cookie : request.getCookies()) {
+                    System.out.println("Cookie " + cookie.getName() + " : " + cookie.getValue());
                 }
+                System.out.println("username " + request.getParameter("username"));
+                System.out.println("password " + request.getParameter("password"));
+
+
+                Credentials credentials = new Credentials(request.getParameter("username"), request.getParameter("password"));
+                return Optional.of(credentials);
             }
+
             return Optional.empty();
         } catch (Exception e) {
             logger.error("An unknown error occurred while trying to extract user credentials", e);
@@ -83,13 +86,14 @@ public class AuthServiceRedisUser {
         }
     }
 
-    private static Authentication createAuthentication(String actor, @NonNull Role... roles) {
+    private static Authentication createAuthentication(String actor, String password, @NonNull Role... roles) {
         // The difference between `hasAuthority` and `hasRole` is that the latter uses the `ROLE_` prefix
         List<GrantedAuthority> authorities = Stream.of(roles)
                 .distinct()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                 .collect(toList());
-        return new UsernamePasswordAuthenticationToken(nonNull(actor) ? actor : "N/A", "N/A", authorities);
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(nonNull(actor) ? actor : "N/A", nonNull(password) ? password : "N/A", authorities);
+        return authToken;
     }
 
 }

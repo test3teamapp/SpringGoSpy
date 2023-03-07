@@ -44,10 +44,10 @@ public class PersonDBService {
 
         Flux<Person> responseFluxOfPerson = responseSpec.bodyToFlux(Person.class);
 
-        AtomicInteger count = new AtomicInteger();
-        responseFluxOfPerson.subscribe(i -> count.getAndIncrement(),
-                error -> System.err.println("Error during request 'findAllPeople'"),
-                () -> System.out.println("all done 'findAllPeople' : " + count));
+//        AtomicInteger count = new AtomicInteger();
+//        responseFluxOfPerson.subscribe(i -> count.getAndIncrement(),
+//                error -> System.err.println("Error during request 'findAllPeople'"),
+//                () -> System.out.println("all done 'findAllPeople' : " + count));
 
         return responseFluxOfPerson.toIterable();
     }

@@ -22,9 +22,11 @@ public class Person {
 
     // Indexed for exact text matching
     @Indexed
+    @Searchable
     private String name;
 
     @Indexed
+    @Searchable
     private String deviceToken;
 
     //Indexed for Geo Filtering

@@ -60,10 +60,25 @@ public class ApiController {
     Optional<User> userById(@PathVariable("id") String id) {
         return userRepo.findById(id);
     }
+
+    @GetMapping("/api/user/getByName/{name}")
+    Optional<User> userByName(@PathVariable("name") String name) {
+
+        return userRepo.findOneByUsername(name);
+    }
+
+    @GetMapping("/api/user/getByToken/{token}")
+    Optional<User> userByToken(@PathVariable("token") String token) {
+
+        return userRepo.findOneByToken(token);
+    }
+
     @PostMapping("/api/user/create")
     Optional<User> createUser(@RequestBody User newUser) {
         User savedUser = userRepo.save(newUser);
         return Optional.of(savedUser);
     }
+
+
 
 }
