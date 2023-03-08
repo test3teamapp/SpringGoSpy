@@ -28,12 +28,7 @@
     <div id="content-wrapper" class="d-flex flex-column">
         <!-- Main Content -->
         <div id="content">
-            <h1 th:inline="text">Hello <span th:remove="tag" sec:authentication="name">stranger</span>!</h1>
-            <div sec:authorize="isAuthenticated()">
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Sign Out"/>
-                </form>
-            </div>
+
             <!-- Begin Table Content -->
             <div class="container-fluid">
 
@@ -80,38 +75,52 @@
             <!-- /.container-fluid table data-->
             <!-- buttons -->
             <div class="container-fluid">
-                <div class="card shadow mb-4">
-
-                    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
-                        <select id="deviceSelectionList">
-                            <option value="nick">nick</option>
-                            <option th:each="person : ${allPeopleList}" th:value="${person.name}"
-                                    th:text="${person.name}">???
-                            </option>
-                        </select>
+                    <div class="row">
+                        <div class="col-sm">
+                            <select id="deviceSelectionList">
+                                <option value="nick">nick</option>
+                                <option th:each="person : ${allPeopleList}" th:value="${person.name}"
+                                        th:text="${person.name}">???
+                                </option>
+                            </select>
+                        </div>
                         <!-- websocket communication / alternative. no page reload -->
-                        <button class="btn btn-primary" onclick="sendCommandMessage('TRIGGER_LU');">
-                            (WS) Find Device
-                        </button>
-                        <button class="btn btn-primary" onclick="sendCommandMessage('STOP_TRACKING');">
-                            (WS) Stop Tracking
-                        </button>
-                        <button class="btn btn-primary" onclick="sendCommandMessage('START_TRACKING');">
-                            (WS) Start Tracking
-                        </button>
-                        <button class="btn btn-primary" onclick="clearMap()">
-                            Clear Map
-                        </button>
+                        <div class="col-sm">
+                            <button class="btn btn-primary" onclick="sendCommandMessage('TRIGGER_LU');">
+                                (WS) Find Device
+                            </button>
+                        </div>
+                        <div class="col-sm">
+                            <button class="btn btn-primary"
+                                    onclick="sendCommandMessage('STOP_TRACKING');">
+                                (WS) Stop Tracking
+                            </button>
+                        </div>
+                        <div class="col-sm">
+                            <button class="btn btn-primary"
+                                    onclick="sendCommandMessage('START_TRACKING');">
+                                (WS) Start Tracking
+                            </button>
+                        </div>
+                        <div class="col-sm">
+                            <button class="btn btn-primary" onclick="clearMap()">
+                                Clear Map
+                            </button>
+                        </div>
                     </div>
-
+            </div> <!-- /.container-fluid buttons-->
+            <div class="container-fluid">
+                <div class="card shadow mb-4">
                     <!-- map -->
                     <!--Google map-->
                     <div class="container-fluid">
-                        <div id="map-container" style="width:100%; height: 550px; margin-bottom: 30px;"></div>
+                        <div id="map-container"
+                             style="width:100%; height: 550px; margin-bottom: 30px;"></div>
                     </div>
                     <!-- end map -->
+
                 </div> <!-- card -->
-            </div> <!-- /.container-fluid buttons-->
+            </div> <!-- /.container-fluid map-->
         </div> <!-- Content -->
     </div> <!-- Content Wrapper -->
 </div><!-- Page Wrapper -->

@@ -20,7 +20,8 @@ public class DashboardController {
 
     @RequestMapping({"/","/dashboard"})
     public String home(@RequestParam(value = "myName", defaultValue = "World") String name, Model model) {
-        return initController(name, model);
+        //return initController(name, model);
+        return "redirect:/maps";
     }
 
     private String initController(String name, Model model){
