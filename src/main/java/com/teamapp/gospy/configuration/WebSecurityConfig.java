@@ -55,7 +55,7 @@ public class WebSecurityConfig {
                 //.addFilterAt(this::authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
-                        .anyRequest().authenticated()//permitAll()//authenticated()
+                        .anyRequest().permitAll()//authenticated()
 
                 )
                 .formLogin((form) -> form

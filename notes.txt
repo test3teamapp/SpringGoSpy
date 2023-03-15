@@ -2,3 +2,10 @@
 Methods were generated (could see them in the structure window, but...
 they were not identified during compilation.
 2)removed Lombok and hardcoded all been methods/constructors
+
+---- DOCKER build ----
+
+DOCKER_BUILDKIT=1 docker build -t gospy-spring .
+
+docker run -p 8080:8080 --network="host" gospy-spring
+
