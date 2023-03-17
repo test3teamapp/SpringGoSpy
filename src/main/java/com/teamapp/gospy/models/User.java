@@ -4,6 +4,7 @@ import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
 import com.redis.om.spring.annotations.Searchable;
 import com.teamapp.gospy.helperobjects.Role;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.redis.core.RedisHash;
@@ -29,6 +30,9 @@ public class User implements UserDetails {
     @Indexed
     @Searchable
     private String token;
+
+    @Indexed
+    Collection<UserAuthority> authorities;
     @Indexed
     private Date lastlogin;
 
@@ -36,8 +40,9 @@ public class User implements UserDetails {
         this.username = null;
         this.password = null;
         this.lastlogin = null;
-        this.token = null;
+        this.token = "loggedout";
         this.id = null;
+        this.authorities = null;
     }
 
     public User(String username, String password) {
@@ -46,13 +51,25 @@ public class User implements UserDetails {
         this.lastlogin = null;
         this.token = "loggedout";
         this.id = null;
+        this.authorities = List.of(new UserAuthority(Role.USER));
     }
-    public User(String username, String password, boolean accountNonLocked) {
-        this.username = username;
-        this.password = password;
-        this.lastlogin = null;
-        this.token = "loggedout";
-        this.id = null;
+    public User(boolean isGuest) {
+        if (isGuest){
+            this.username = "springuser" + RandomStringUtils.randomAlphabetic(5);;
+            this.password = "pass" + RandomStringUtils.randomAlphabetic(7);;
+            this.lastlogin = null;
+            this.token = "loggedout";
+            this.id = null;
+            this.authorities = List.of(new UserAuthority(Role.GUEST));
+        }else {
+            this.username = null;
+            this.password = null;
+            this.lastlogin = null;
+            this.token = "loggedout";
+            this.id = null;
+            this.authorities = null;
+        }
+
     }
 
     public static User of(String name, String pass) {
@@ -94,7 +111,11 @@ public class User implements UserDetails {
 
     @Override
     public Collection<UserAuthority> getAuthorities() {
-        return List.of(new UserAuthority(Role.USER));
+        return this.authorities;
+    }
+
+    public void setAuthorities(Collection<UserAuthority> authorities) {
+        this.authorities = authorities;
     }
 
     public String getPassword() {

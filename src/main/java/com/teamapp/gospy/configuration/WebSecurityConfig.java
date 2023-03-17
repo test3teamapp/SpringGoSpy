@@ -1,5 +1,6 @@
 package com.teamapp.gospy.configuration;
 
+import com.teamapp.gospy.helperobjects.Role;
 import com.teamapp.gospy.services.AuthServiceRedisToken;
 import com.teamapp.gospy.services.AuthServiceRedisUser;
 import com.teamapp.gospy.services.AuthServiceRedisUserWebLogin;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,6 +35,9 @@ import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true
+)
 public class WebSecurityConfig {
 
     @Bean
@@ -52,11 +57,11 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // Auth filter
-                //.addFilterAt(this::authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(this::authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
-                        .anyRequest().permitAll()//authenticated()
-
+                        //.requestMatchers("/newguest").hasAuthority(Role.GUEST.name())
+                        .anyRequest().authenticated()//permitAll()//authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
@@ -88,6 +93,10 @@ public class WebSecurityConfig {
             logger.info("Logging in with access token");
             authentication.ifPresent(SecurityContextHolder.getContext()::setAuthentication);
         } else {
+            logger.info("Logging with token failed");
+        }
+        /*
+        else {
             logger.info("Trying to check access with user credentials");
             authentication = this.authServiceUser.authenticate((HttpServletRequest) request);
             if (authentication.isPresent()) {
@@ -122,7 +131,7 @@ public class WebSecurityConfig {
             }
 
         }
-
+        */
         chain.doFilter(request, response);
     }
 

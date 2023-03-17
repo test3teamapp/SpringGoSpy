@@ -17,6 +17,10 @@ public class UserAuthority implements GrantedAuthority {
         this.authority = authority;
     }
 
+    public Role getRole() {
+        return this.authority;
+    }
+
     @Override
     public String getAuthority() {
         return this.authority.name();

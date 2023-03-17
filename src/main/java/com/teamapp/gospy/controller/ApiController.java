@@ -6,6 +6,7 @@ import com.teamapp.gospy.models.User;
 import com.teamapp.gospy.models.UserRepository;
 import com.teamapp.gospy.services.PersonDBService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -79,6 +80,15 @@ public class ApiController {
         return Optional.of(savedUser);
     }
 
+    // create guest user with 5 minutes expiration period
+
+    @PreAuthorize("hasRole('ROLE_GUEST')")
+    @GetMapping("/newguest")
+    Optional<User> newGuestUser() {
+        User newUser = new User(true);
+        User savedUser = userRepo.save(newUser);
+        return Optional.of(savedUser);
+    }
 
 
 }

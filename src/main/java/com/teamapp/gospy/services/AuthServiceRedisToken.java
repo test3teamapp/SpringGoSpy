@@ -1,5 +1,6 @@
 package com.teamapp.gospy.services;
 
+import com.teamapp.gospy.helperobjects.Role;
 import com.teamapp.gospy.models.User;
 import com.teamapp.gospy.models.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,8 +41,13 @@ public class AuthServiceRedisToken {
         try {
             Optional<User> user = this.userRepo.findOneByToken(token);
             if (!user.isEmpty()) {
-                Authentication authentication = createAuthentication(user.get().getId(), Role.USER);
-                return Optional.of(authentication);
+                if (user.get().getAuthorities() != null) {
+                    List<Role> roles =  user.get().getAuthorities().stream()
+                            .map(authority -> authority.getRole())
+                            .collect(toList());
+                    Authentication authentication = createAuthentication(user.get().getId(), roles );
+                    return Optional.of(authentication);
+                }
             }
             return Optional.empty();
         } catch (Exception e) {
@@ -70,19 +76,14 @@ public class AuthServiceRedisToken {
         }
     }
 
-    private static Authentication createAuthentication(String actor, @NonNull Role... roles) {
+    private static Authentication createAuthentication(String actor, @NonNull List<Role> roles) {
         // The difference between `hasAuthority` and `hasRole` is that the latter uses the `ROLE_` prefix
-        List<GrantedAuthority> authorities = Stream.of(roles)
+        List<GrantedAuthority> authorities = roles.stream()
                 .distinct()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                 .collect(toList());
         return new UsernamePasswordAuthenticationToken(nonNull(actor) ? actor : "N/A", "N/A", authorities);
     }
 
-    private enum Role {
-        USER,
-        ADMIN,
-        SYSTEM,
-    }
 
 }
