@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import com.redis.om.spring.search.stream.EntityStream;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -26,6 +27,7 @@ public class PersonDBService {
     // the record index is PersonIdx, while the nodejs default was Person:index
 
     WebClient client;
+
     public PersonDBService() {
        this.client = WebClient.builder()
                .baseUrl("http://rheotome.eu:8084")
@@ -52,6 +54,7 @@ public class PersonDBService {
         return responseFluxOfPerson.toIterable();
     }
 
+
     public void printAllPeople() {
 //        return entityStream //
 //                .of(Person.class) //
@@ -66,6 +69,7 @@ public class PersonDBService {
         responseFluxOfPerson.subscribe(i -> System.out.println(i.toString()));
     }
 
+
     public Mono<CommandReplyObj> sendCommandToDevice(String devicename, String command){
         ResponseSpec responseSpec = client.get()
                 .uri("http://rheotome.eu:8084/sendCommand/spring/byName/"+ devicename + "/command/" + command)
@@ -76,6 +80,7 @@ public class PersonDBService {
 
         return responseMonoCommandReplyObj;
     }
+
 
     public Mono<CommandReplyObj> waitForLUForDevice(String devicename){
         ResponseSpec responseSpec = client.get()

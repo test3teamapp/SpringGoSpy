@@ -3,6 +3,7 @@ package com.teamapp.gospy.auth;
 import com.teamapp.gospy.configuration.WebSecurityConfig;
 import com.teamapp.gospy.helperobjects.Role;
 import com.teamapp.gospy.models.User;
+import com.teamapp.gospy.models.UserAuthority;
 import com.teamapp.gospy.models.UserRepository;
 import com.teamapp.gospy.services.SecurityUserDetailsService;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -42,10 +44,27 @@ public class AuthProvider implements AuthenticationProvider {
         boolean isMatch =  pass.compareTo(user.getPassword()) == 0 ? true : false ;//passwordEncoder.matches((CharSequence) authentication.getCredentials(), user.getPassword());
         logger.info("password matching result : " + isMatch);
         if (isMatch){
-            List<GrantedAuthority> authorities = Stream.of(List.of(Role.USER, Role.ADMIN))
+            List<Role> roles =  user.getAuthorities().stream()
+                    .map(authority -> authority.getRole())
+                    .collect(toList());
+            List<GrantedAuthority> authorities = Stream.of(roles)
                     .distinct()
                     .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                     .collect(toList());
+//            ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>() ;
+//            for (Role r: roles
+//            ) {
+//                authorities.add(new SimpleGrantedAuthority("ROLE_" + r.name()));
+//            }
+
+            // debug
+            logger.debug("Assigned authorities : " + authorities.stream().map(auth -> auth.getAuthority()));
+            for (GrantedAuthority auth: authorities
+            ) {
+                System.out.print(auth.getAuthority() + " ");
+            }
+            System.out.println();
+            /// end debug
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, pass, authorities);
 
             return authToken;

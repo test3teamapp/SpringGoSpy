@@ -38,6 +38,9 @@ public class AuthServiceRedisToken {
     }
 
     private Optional<Authentication> lookup(String token) {
+
+        if (token.compareTo("") == 0 || token.compareTo("loggedout") == 0) return Optional.empty();
+
         try {
             Optional<User> user = this.userRepo.findOneByToken(token);
             if (!user.isEmpty()) {

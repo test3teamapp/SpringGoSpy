@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,6 +42,7 @@ public class MapsController {
         //return "maps";
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     private Iterable<Person> fetchAllPeopleFromDB() {
 
         //return personRepo.findAll();
@@ -48,12 +50,14 @@ public class MapsController {
         return personDBService.findAllPeople();
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/maps/sendCommandToDeviceLU")
     public String sendCommandToDeviceLU(@ModelAttribute CommandObj commandObj, BindingResult errors, Model model) {
         personDBService.sendCommandToDevice(commandObj.getDeviceId(), "TRIGGER_LU");
         return "redirect:/maps";
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/maps/sendCommandToDeviceSTOP")
     public String sendCommandToDeviceSTOP(@ModelAttribute CommandObj commandObj, BindingResult errors, Model model) {
         personDBService.sendCommandToDevice(commandObj.getDeviceId(), "STOP_TRACKING");

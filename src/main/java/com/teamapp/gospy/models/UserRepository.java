@@ -22,12 +22,12 @@ public interface UserRepository extends RedisDocumentRepository<User,String> {
 
     // Find people by name
     /*
-    THE SEARCH QUERRY SENT TO DB ALWAYS RETURNED 0 RESULTS.
+    THE SEARCH QUERY SENT TO DB ALWAYS RETURNED 0 RESULTS.
     "FT.SEARCH" "com.teamapp.gospy.models.UserIdx" "@username:string"
     FUCK IT ! DOING IT THIS WAY TO MOVE ON WITH THE PROJECT
 
     meanwhile "FT.SEARCH" "com.teamapp.gospy.models.UserIdx" "*"
-    retuns as expected all entries.
+    returns as expected all entries.
 
      */
     default Optional<User> findOneByUsername(String username){
