@@ -8,7 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <script th:inline="javascript">
 
+        /*[# sec:authorize="isAuthenticated()"]*/
+            window.location.href = "/maps"
+        /*[/]*/
+
+    </script>
     <title>GoSpy</title>
 
     <!-- Bootstrap CSS -->
@@ -45,7 +51,8 @@
 
                             <label class="col-sm-2 col-form-label"> User : </label>
                             <div class="col-sm-2">
-                                <input class="form-control " id="usernameTextField" type="text" name="username" />
+                                <input class="form-control " id="usernameTextField" type="text" name="username"
+                                    autofocus="autofocus" />
                             </div>
                         </div>
                         <div class="form-group row">
@@ -72,7 +79,7 @@
                             mode: "cors",
                             cache: "default",
                         });
-      
+
 
                         function sendGuestRequest() {
                             var guestLoginErrorLabel = document.getElementById("guestLoginErrorLabel");
@@ -91,12 +98,12 @@
                                     unameTextField.value = json.username;
                                     var passTextField = document.getElementById("passwordTextField");
                                     passTextField.value = json.password;
-                                    guestLoginErrorLabel.innerHTML = "Please login";                                    
+                                    guestLoginErrorLabel.innerHTML = "Please login";
                                     guestLoginErrorLabel.style.display = "block";
                                 })
                                 .catch((error) => {
                                     console.error("Error:", error);
-                                    guestLoginErrorLabel.innerHTML = "Sorry ! Could not create Guest User";                                    
+                                    guestLoginErrorLabel.innerHTML = "Sorry ! Could not create Guest User";
                                     guestLoginErrorLabel.style.display = "block";
                                 });
                         }

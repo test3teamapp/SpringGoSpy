@@ -68,7 +68,7 @@ public class WebSecurityConfig {
                         .permitAll()
                 )
                 .logout((logout) -> logout
-                        .invalidateHttpSession(true)
+                        .invalidateHttpSession(false)
                         .clearAuthentication(true)
                         .permitAll()
                 );
