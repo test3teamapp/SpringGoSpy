@@ -64,15 +64,15 @@ public class AuthServiceRedisUserWebLogin {
 
     private static Optional<Credentials> extractUserAuthCredentials(@NonNull HttpServletRequest request) {
         try {
-            System.out.println("AuthServiceRedisUserWebLogin : Request type : " + request.getMethod() + " " + request.getAuthType() + " " + request.getRequestURI());
+            //System.out.println("AuthServiceRedisUserWebLogin : Request type : " + request.getMethod() + " " + request.getAuthType() + " " + request.getRequestURI());
 
             if (request.getMethod().compareTo(HttpMethod.POST.name()) == 0
                     && request.getRequestURI().compareTo("/login") == 0) {
                 for (Cookie cookie : request.getCookies()) {
-                    System.out.println("Cookie " + cookie.getName() + " : " + cookie.getValue());
+                    //System.out.println("Cookie " + cookie.getName() + " : " + cookie.getValue());
                 }
-                System.out.println("username " + request.getParameter("username"));
-                System.out.println("password " + request.getParameter("password"));
+                //System.out.println("username " + request.getParameter("username"));
+                //System.out.println("password " + request.getParameter("password"));
 
 
                 Credentials credentials = new Credentials(request.getParameter("username"), request.getParameter("password"));

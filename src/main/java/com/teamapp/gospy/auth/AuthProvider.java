@@ -61,9 +61,9 @@ public class AuthProvider implements AuthenticationProvider {
             logger.debug("Assigned authorities : " + authorities.stream().map(auth -> auth.getAuthority()));
             for (GrantedAuthority auth: authorities
             ) {
-                System.out.print(auth.getAuthority() + " ");
+                //System.out.print(auth.getAuthority() + " ");
             }
-            System.out.println();
+            //System.out.println();
             /// end debug
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, pass, authorities);
 

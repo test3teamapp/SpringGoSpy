@@ -73,7 +73,7 @@
                             "Authorization": "ACCESSTOKEN=guesttoken",
                         });
 
-                        const myRequest = new Request("http://localhost:8080/newguest", {
+                        const myRequest = new Request("/newguest", {
                             method: "GET",
                             headers: myHeaders,
                             mode: "cors",

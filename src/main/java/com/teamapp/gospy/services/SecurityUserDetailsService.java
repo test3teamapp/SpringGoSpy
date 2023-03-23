@@ -24,16 +24,16 @@ public class SecurityUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
         Optional<User> user = userRepository.findOneByUsername(username);
-        System.out.println("User " + username + " found in DB:" + (!user.isEmpty()));
+        //System.out.println("User " + username + " found in DB:" + (!user.isEmpty()));
         if (user.isEmpty()) throw new UsernameNotFoundException("user not found");
         //debug
-        System.out.print("User " + username + " authorities:");
+        //System.out.print("User " + username + " authorities:");
         User tempUser = (User) user.get();
         for (UserAuthority auth: tempUser.getAuthorities()
              ) {
-            System.out.print(auth.getAuthority() + " ");
+            //System.out.print(auth.getAuthority() + " ");
         }
-        System.out.println();
+        //System.out.println();
         return user.get();
     }
 

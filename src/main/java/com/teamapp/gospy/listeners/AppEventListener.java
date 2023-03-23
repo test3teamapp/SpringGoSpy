@@ -31,7 +31,7 @@ public class AppEventListener implements ApplicationListener {
         //org.springframework.web.socket.messaging.SessionSubscribeEvent
         //org.springframework.web.socket.messaging.SessionDisconnectEvent
 
-        System.out.println(" ApplicationEvent  " + event.toString());//getClass().getName());
+        //System.out.println(" ApplicationEvent  " + event.toString());//getClass().getName());
         String username;
         String token;
         switch (event.getClass().getName()) {
@@ -42,7 +42,7 @@ public class AppEventListener implements ApplicationListener {
                 WebAuthenticationDetails webDetails = (WebAuthenticationDetails) loginEvent.getAuthentication().getDetails();
                 token = webDetails.getSessionId();
                 //debug
-                System.out.println("onApplicationEvent | InteractiveAuthenticationSuccessEvent | user=" + username + " token=" + token);
+                //System.out.println("onApplicationEvent | InteractiveAuthenticationSuccessEvent | user=" + username + " token=" + token);
                 userDBService.updateUserLoginDate(username);
                 userDBService.updateUserToken(username, token);
                 break;

@@ -30,7 +30,7 @@ public class ApiController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/api/person/getall")
     Iterable<Person> allTrackedPeople() {
-        System.out.println("allTrackedPeople() called");
+        //System.out.println("allTrackedPeople() called");
         //return personRepo.findAll(Sort.by(Sort.Direction.ASC, "locationUpdated"));
         return personDBService.findAllPeople();
         //return personRepo.findAll();
@@ -45,7 +45,7 @@ public class ApiController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(path = "/api/person/create/" , consumes = "application/json")
     Optional<Person> createPerson(@RequestBody Person newPerson) {
-        System.out.println(newPerson.toString());
+        //System.out.println(newPerson.toString());
         Person savedPerson = personRepo.save(newPerson);
         return Optional.of(savedPerson);
     }
