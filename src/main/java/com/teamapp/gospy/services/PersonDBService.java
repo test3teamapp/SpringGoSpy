@@ -82,10 +82,11 @@ trust.store.password=rheotome_eu
          */
         /// Environment is null at this point .... :(
         /// so ...
-
-        this.trustStorePath = "classpath:gospy_spring_truststore";
+        String thisDir = System.getProperty("user.dir");
+        logger.info("Working Directory = " + thisDir);
+        this.trustStorePath = thisDir + "/gospy_spring_truststore";
         this.trustStorePass = "rheotome_eu";
-        this.keyStorePath = "classpath:gospy_spring_keystore.pkcs12";
+        this.keyStorePath = thisDir + "/gospy_spring_keystore.pkcs12";
         this.keyStorePass = "rheotome_eu";
         this.keyStoreType = "PKCS12";
         this.keyAlias = "rheotome_eu";

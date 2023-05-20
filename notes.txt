@@ -13,5 +13,5 @@ keytool -import -file ~/Documents/rheotome.eu/cert1.pem -alias rheotome_eu -keys
 
 DOCKER_BUILDKIT=1 docker build -t gospy-spring .
 
-docker run -p 8080:8080  -p 8443:8443 --network="host" gospy-spring
+docker run -d -p 8080:8080  -p 8443:8443 --network="host" gospy-spring
 
