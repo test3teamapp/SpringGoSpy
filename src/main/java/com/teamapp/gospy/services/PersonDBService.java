@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import com.redis.om.spring.search.stream.EntityStream;
@@ -15,10 +16,13 @@ import org.springframework.web.reactive.function.client.WebClient.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.http.HttpClient;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class PersonDBService {
+
+    private final String apiHost = "https://gospy.rheotome.eu:8084";
 
     @Autowired
     EntityStream entityStream; // not working for us because of indexing mismatch in redis
@@ -30,8 +34,7 @@ public class PersonDBService {
 
     public PersonDBService() {
        this.client = WebClient.builder()
-               .baseUrl("http://rheotome.eu:8084")
-               .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+               .baseUrl(apiHost)
                .build();
     }
 
@@ -41,7 +44,7 @@ public class PersonDBService {
 //                .of(Person.class) //
 //                .collect(Collectors.toList());
         ResponseSpec responseSpec = client.get()
-                .uri("http://rheotome.eu:8084/persons/all")
+                .uri(apiHost + "/persons/all")
                 .retrieve();
 
         Flux<Person> responseFluxOfPerson = responseSpec.bodyToFlux(Person.class);
@@ -61,7 +64,7 @@ public class PersonDBService {
 //                .collect(Collectors.toList());
 
         ResponseSpec responseSpec = client.get()
-                .uri("http://rheotome.eu:8084/persons/all")
+                .uri(apiHost + "/persons/all")
                 .retrieve();
 
         Flux<Person> responseFluxOfPerson = responseSpec.bodyToFlux(Person.class);
@@ -72,7 +75,7 @@ public class PersonDBService {
 
     public Mono<CommandReplyObj> sendCommandToDevice(String devicename, String command){
         ResponseSpec responseSpec = client.get()
-                .uri("http://rheotome.eu:8084/sendCommand/spring/byName/"+ devicename + "/command/" + command)
+                .uri(apiHost + "/sendCommand/spring/byName/"+ devicename + "/command/" + command)
                 .retrieve();
 
         Mono<CommandReplyObj> responseMonoCommandReplyObj= responseSpec.bodyToMono(CommandReplyObj.class);
@@ -84,7 +87,7 @@ public class PersonDBService {
 
     public Mono<CommandReplyObj> waitForLUForDevice(String devicename){
         ResponseSpec responseSpec = client.get()
-                .uri("http://rheotome.eu:8084/waitForLU/spring/byName/" + devicename)
+                .uri(apiHost + "/waitForLU/spring/byName/" + devicename)
                 .retrieve();
 
         Mono<CommandReplyObj> responseMonoCommandReplyObj = responseSpec.bodyToMono(CommandReplyObj.class);
