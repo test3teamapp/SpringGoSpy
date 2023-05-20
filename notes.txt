@@ -3,6 +3,12 @@ Methods were generated (could see them in the structure window, but...
 they were not identified during compilation.
 2)removed Lombok and hardcoded all been methods/constructors
 
+-----ssl -----
+
+cat ~/Documents/rheotome.eu/privkey1.pem ~/Documents/rheotome.eu/cert1.pem > rheotome_eu_key_cert.pem.txt
+openssl pkcs12 -export -in rheotome_eu_key_cert.pem.txt -out gospy_spring_keystore.pkcs12 -name rheotome_eu -noiter -nomaciter
+keytool -import -file ~/Documents/rheotome.eu/cert1.pem -alias rheotome_eu -keystore gospy_spring_truststore
+
 ---- DOCKER build ----
 
 DOCKER_BUILDKIT=1 docker build -t gospy-spring .
